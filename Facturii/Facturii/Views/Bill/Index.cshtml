@@ -1,0 +1,117 @@
+﻿@model PagedList.IPagedList<Facturii.Models.Bill>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<html>
+<style>
+    input[type=text], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+</style>
+
+<h2>Factura</h2>
+
+@using (Html.BeginForm("Index", "Bill", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <table class="table">
+            <tr>
+                <th>
+                </th>
+                <th>
+                    NrIdentificare
+                </th>
+                <th>
+                    Nume
+                </th>
+                <th>
+                    Prenume
+                </th>
+                <th>
+                    Data Emiteri
+                </th>
+                <th>
+                    Data Scadenta
+                </th>
+                <th>
+                    Consum
+                </th>
+                <th>
+                    Total
+                </th>
+                <th></th>
+            </tr>
+
+           @for (int i = 0; i < Model.Count; i++)
+           {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => Model[i].isChecked)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].NrIdentificare)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].Nume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].Prenume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].DataEmiteri)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].DataScadenta)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].Consum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => Model[i].Total)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Bill", "Form", new { Id = Model[i].NrIdentificare }, null)
+                    </td>
+                </tr>
+            }
+            </table>
+            <br>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+            <br />
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+            @Html.PagedListPager(Model, page => Url.Action("Index",
+         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+}
+

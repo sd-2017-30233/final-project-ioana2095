@@ -1,0 +1,10 @@
+﻿@model Facturii.Models.Admin
+@{
+    ViewBag.Title = "AdminPage";
+}
+
+<h2>AdminPage</h2>
+
+@Html.ActionLink("Cautare Clienti","AfisareClient","Admin")
+@Html.ActionLink("Cautare Firme", "AfisareCompany", "Admin")
+@Html.ActionLink("Cautare Bill", "AfisareBill", "Admin")

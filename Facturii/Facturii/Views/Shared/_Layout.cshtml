@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title -Facturi</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <span class="noti glyphicon glyphicon-bell"><span class="count">&nbsp;</span></span>
+                <div class="noti-content">
+                    <div class="noti-top-arrow"></div>
+                    <ul id="notiContent"></ul>
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Facturi", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Facturi</p>
+        </footer>
+    </div>
+    @* Add Jquery Library*@
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    <style type="text/css">
+        .noti-content{
+            position:fixed;
+            right:50px;
+            background:#e5e5e5;
+            border-radius:4px;
+            top:47px;
+            width:250px;
+            display:none;
+            border:1px solid #9e9888;
+        }
+        ul#notiContent
+        {
+            max-height:200px;
+            overflow:auto;
+            padding:0px;
+            margin:0px;
+            padding-left:20px;
+
+        }
+        ul#notiContent li{
+            margin:3px;
+            padding:6px;
+            background:#fff;
+        }
+        .noti-top-arrow
+        {
+            border-color:transparent;
+            border-bottom-color:#f5de83;
+            border-style:dashed dashed solid;
+            border-width:0 8.5px 8.5px;
+            position:absolute;
+            right:32px;
+            top:-8px;
+        }
+        span.noti
+        {
+            color:#FF2323;
+            margin:15PX;
+            position:fixed;
+            right:30px;
+            font-size:18px;
+            cursor:pointer;
+        }
+        span.count
+        {
+            position:relative;
+            top:-3px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('span.noti').click(function (e) {
+                e.stopPropagation();
+                $('.noti-content').show();
+                var count = 0;
+                count = parseInt($('span.count').html()) || 0;
+                if(count >0)
+                {
+                    updateNotification();
+                }
+                $('span.count', this).html('&nbsp;');
+            })
+        })
+        $('html').click(function () {
+            $('.noti-content').hide();
+        })
+        function updateNotification()
+        {
+            $('#notiContent').empty();
+            $('#notiContent').append($('<li>Loading...</li>'));
+
+            $.ajax({
+                type: 'GET',
+                url: '/Consumer/GetNotifications/',
+                success:function(response)
+                {
+                    $('#notiContent').empty();
+                    if(response.length==0)
+                    {
+                        $('#notiContent').append($('<li>No data available</li>'));
+                    }
+                    $.each(response, function (index, value) {
+                        $('#notiContent').append($('<li>New contact:' + '(' + value.IdFactura + ') added</li>'));
+                    });
+                },
+                error:function(error)
+                {
+                    console.log(error);
+                }
+            })
+        }
+        function updateNotificationCount()
+        {
+            var count = 0;
+            count=parseInt($('span.count').html()) || 0;
+            count++;
+            $('span.count').html(count);
+        }
+        var MyHub = $.connection.MyHub;
+        $.connection.hub.start().done(function () {
+            console.log('Notification hub started');
+        });
+        MyHub.client.notify=function(message)
+        {
+            if(message && message.toLowerCase()=="added")
+            {
+                updateNotificationCount();
+            }
+        }
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

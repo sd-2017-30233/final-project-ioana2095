@@ -1,0 +1,79 @@
+﻿@model Facturii.Models.Client
+
+@{
+    ViewBag.Title = "ConsumerPage";
+}
+
+<html>
+<style>
+    input[type=text], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+</style>
+
+
+    <div>
+        <div class="notificationBalloon" id="container">
+        </div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nume)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nume)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Prenume)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Prenume)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Telefon)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Telefon)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Adresa)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Adresa)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>

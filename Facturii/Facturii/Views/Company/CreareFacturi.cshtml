@@ -1,0 +1,107 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model <Facturii.Models.InfoClient>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "CreareFacturi";
+}
+<html>
+<style>
+    input[type=text], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+</style>
+
+    <h2>CreareFacturi</h2>
+
+    @using (Html.BeginForm("CreareFacturi", "Company", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <table class="table">
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        Check
+                    </th>
+                    <th>
+                        Last Name
+                    </th>
+                    <th>
+                        First Name
+                    </th>
+                    <th>
+                        Telefon
+                    </th>
+                    <th>
+                        Address
+                    </th>
+                    <th></th>
+                </tr>
+
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(m => Model[i].IdConsumer)
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => Model[i].isCheck)
+                        </td>
+                        <td>
+                            @Model[i].Nume
+                            @Html.HiddenFor(m => Model[i].Nume)
+                        </td>
+                        <td>
+                            @Model[i].Prenume
+                            @Html.HiddenFor(m => Model[i].Prenume)
+                        </td>
+                        <td>
+                            @Model[i].Telefon
+                            @Html.HiddenFor(m => Model[i].Telefon)
+                        </td>
+                        <td>
+                            @Model[i].Adresa
+                            @Html.HiddenFor(m => Model[i].Adresa)
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+            <br />
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+            @Html.PagedListPager(Model, page => Url.Action("Index",
+         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+        </div>
+    }
+
+
